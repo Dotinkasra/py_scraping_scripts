@@ -7,13 +7,13 @@ from bs4.element import ResultSet
 from sql import Controller
 
 class Save():
-    def __init__(self, top_url: str, dbname: str) -> None:
-        self.top_url: str = top_url
-        self.dbname = dbname
-        self.controller = Controller('test.db')
+    def __init__(self, top_url: str, dbname: str, table: str) -> None:
+        self.top_url = top_url
+        self.table = table
+        self.controller = Controller(dbname)
         self.controller.create_table(
-            dbname = dbname,
-            sql = f'CREATE TABLE {self.dbname}(id INTEGER PRIMARY KEY, tweet TEXT NOT NULL, date DATETIME NOT NULL, retweet INTEGER NOT NULL)'
+            table = table,
+            sql = f'CREATE TABLE {self.table}(id INTEGER PRIMARY KEY, tweet TEXT NOT NULL, date DATETIME NOT NULL, retweet INTEGER NOT NULL)'
         )
 
     def create_bs(self, url: str) -> BeautifulSoup:
@@ -41,9 +41,8 @@ class Save():
         [self.set_dev(x) for x in list(self.create_bs(url).find_all('div', {'class': 'tweet'}))]
 
     def set_dev(self, div: ResultSet):
-
         self.controller.do_execute(
-            f"INSERT INTO {self.dbname} (date, tweet, retweet) VALUES (?, ?, ?)",
+            f"INSERT INTO {self.table} (date, tweet, retweet) VALUES (?, ?, ?)",
             (
                 datetime.datetime.strptime(div.find_all('div', {'class': 'posted-at'})[0].text, '%Y年%m月%d日 %H:%M:%S'),
                 div.find_all('p', {'class': 'text'})[0].text,
@@ -58,5 +57,7 @@ print("URL:")
 url = input()
 print("Database name:")
 dbname = input()
-save = Save(url, dbname)
+print("Table name")
+table = input()
+save = Save(url, dbname, table)
 save.main()
