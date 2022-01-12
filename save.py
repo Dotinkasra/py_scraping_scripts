@@ -13,7 +13,7 @@ class Save():
         self.controller = Controller(dbname)
         self.controller.create_table(
             table = table,
-            sql = f'CREATE TABLE {self.table}(id INTEGER PRIMARY KEY, tweet TEXT NOT NULL, date DATETIME NOT NULL, retweet INTEGER NOT NULL)'
+            sql = f'CREATE TABLE IF NOT EXISTS {self.table}(id INTEGER PRIMARY KEY, tweet TEXT NOT NULL, date DATETIME NOT NULL, retweet INTEGER NOT NULL)'
         )
 
     def create_bs(self, url: str) -> BeautifulSoup:
