@@ -93,7 +93,7 @@ class Fc2cm():
         
         def extract_video_contributor(self, soup: BeautifulSoup) -> str:
             return soup.find_all('table')[1].select_one('h2 > a').text 
-
+fc2 = Fc2cm()
 for video in fc2.differ_currentry_and_db():
     fc2.regist_video_info(video)
     time.sleep(3)
